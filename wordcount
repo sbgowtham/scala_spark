@@ -1,0 +1,11 @@
+// 1. Load the text file
+val textRDD = sc.textFile("hdfs://path/to/text/sample_text.txt")
+
+// 2. Perform Word Count
+val wordCounts = textRDD.flatMap(line => line.split(" "))
+                        .map(word => (word, 1))
+                        .reduceByKey(_ + _)
+
+// 3. Print the results
+wordCounts.collect()
+
