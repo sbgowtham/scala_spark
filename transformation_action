@@ -1,0 +1,81 @@
+Transformations
+map
+Definition: Applies a function to each element in the RDD and returns a new RDD.
+Example: val rdd2 = rdd1.map(x => x * 2)
+
+filter
+Definition: Returns a new RDD containing only the elements that satisfy a predicate function.
+Example: val rdd2 = rdd1.filter(x => x > 10)
+
+flatMap
+Definition: Similar to map, but each input element can be mapped to zero or more output elements.
+Example: val rdd2 = rdd1.flatMap(x => x.split(" "))
+
+mapPartitions
+Definition: Applies a function to each partition of the RDD.
+Example: val rdd2 = rdd1.mapPartitions(iter => iter.map(x => x * 2))
+
+distinct
+Definition: Returns a new RDD with distinct elements from the original RDD.
+Example: val rdd2 = rdd1.distinct()
+
+sample
+Definition: Returns a sample subset of the RDD, either with or without replacement.
+Example: val rdd2 = rdd1.sample(withReplacement = false, 0.1)
+
+union
+Definition: Returns a new RDD that contains the union of the elements in the source RDD and the argument RDD.
+Example: val rdd3 = rdd1.union(rdd2)
+
+intersection
+Definition: Returns a new RDD that contains the intersection of elements in the source RDD and the argument RDD.
+Example: val rdd3 = rdd1.intersection(rdd2)
+
+subtract
+Definition: Returns a new RDD that contains the elements in the source RDD but not in the argument RDD.
+Example: val rdd3 = rdd1.subtract(rdd2)
+
+cartesian
+Definition: Returns the Cartesian product of the two RDDs.
+Example: val rdd3 = rdd1.cartesian(rdd2)
+
+groupBy
+Definition: Groups the data in the RDD by the result of a function applied to each element.
+Example: val rdd2 = rdd1.groupBy(x => x % 2)
+
+reduceByKey
+Definition: Combines values with the same key using a function and returns a new RDD of key-value pairs.
+Example: val rdd2 = rdd1.reduceByKey(_ + _)
+
+sortBy
+Definition: Sorts the RDD by the given key or value.
+Example: val rdd2 = rdd1.sortBy(x => x)
+
+join
+Definition: Performs an inner join between two RDDs by key.
+Example: val rdd3 = rdd1.join(rdd2)
+
+coalesce
+Definition: Reduces the number of partitions in an RDD.
+Example: val rdd2 = rdd1.coalesce(2)
+
+Actions
+reduce
+Definition: Aggregates the elements of the RDD using a function, and returns the result.
+Example: val result = rdd1.reduce((x, y) => x + y)
+
+collect
+Definition: Returns an array containing all of the elements in the RDD.
+Example: val result = rdd1.collect()
+
+count
+Definition: Returns the number of elements in the RDD.
+Example: val result = rdd1.count()
+
+first
+Definition: Returns the first element of the RDD.
+Example: val result = rdd1.first()
+
+take
+Definition: Returns an array with the first n elements of the RDD.
+Example: val result = rdd1.take(5)
