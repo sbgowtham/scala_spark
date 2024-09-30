@@ -1,0 +1,6 @@
+step 1
+ssh -i emr1.pem -N -L 8157:ec2-44-220-83-97.compute-1.amazonaws.com:8890 hadoop@ec2-44-220-83-97.compute-1.amazonaws.com
+
+
+step 2
+localhost:8157
