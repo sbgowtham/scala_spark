@@ -1,0 +1,57 @@
+// Step 1: Initialize SparkSession
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+
+
+import spark.implicits._
+
+// Step 2: Load dataset into DataFrame
+val data = Seq(
+  (1, "Brandon Buckner", "avil", "female", 525),
+  (2, "Veda Hopkins", "avil", "male", 633),
+  (3, "Zia Underwood", "paracetamol", "male", 980),
+  (4, "Austin Mayer", "paracetamol", "female", 338),
+  (5, "Mara Higgins", "avil", "female", 153),
+  (6, "Sybill Crosby", "avil", "male", 193),
+  (7, "Tyler Rosales", "paracetamol", "male", 778),
+  (8, "Ivan Hale", "avil", "female", 454),
+  (9, "Alika Gilmore", "paracetamol", "female", 833),
+  (10, "Len Burgess", "metacin", "male", 325)
+)
+
+// Creating DataFrame
+val df = data.toDF("id", "name", "product", "gender", "cnt")
+
+// Show the DataFrame
+df.show()
+
+// Step 3: Perform Transformations
+
+// 1. Filter: Get all rows where product is 'avil'
+val avilDF = df.filter($"product" === "avil")
+avilDF.show()
+
+// 2. Group By: Count the number of customers for each product
+val productCountDF = df.groupBy("product").count()
+productCountDF.show()
+
+// 3. Sorting: Sort the dataset by 'cnt' in descending order
+val sortedDF = df.orderBy($"cnt".desc)
+sortedDF.show()
+
+// 4. Add a new column: Add a column "cnt_in_thousands" which is 'cnt' divided by 1000
+val modifiedDF = df.withColumn("cnt_in_thousands", $"cnt" / 1000)
+modifiedDF.show()
+
+// 5. Aggregation: Find the maximum and average 'cnt' for each product
+val aggDF = df.groupBy("product")
+  .agg(
+    max("cnt").alias("max_cnt"),
+    avg("cnt").alias("avg_cnt")
+  )
+aggDF.show()
+
+// Step 4: Writing DataFrame to CSV (optional)
+modifiedDF.write
+  .option("header", "true")
+  .csv("/path/to/save/output.csv")
