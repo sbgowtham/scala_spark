@@ -7,6 +7,9 @@ localhost:8157
 
 ==code
 
+import org.apache.spark.sql.Row
+import org.apache.spark.sql.types.{ StructType, StructField, StringType };
+
 // Define the schema as a string
 val schemaString = "id name dName gender amount"
 
