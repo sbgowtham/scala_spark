@@ -4,3 +4,37 @@ ssh -i emr1.pem -N -L 8157:ec2-44-220-83-97.compute-1.amazonaws.com:8890 hadoop@
 
 step 2
 localhost:8157
+
+==code
+
+// Define the schema as a string
+val schemaString = "id name dName gender amount"
+
+// Define the schema
+val schema = StructType(
+  schemaString.split(" ").map(fieldName => StructField(fieldName, StringType, true))
+)
+
+// Define the data directly as a sequence of strings
+val data = Seq(
+  "1,Brandon Buckner,avil,female,525",
+  "2,Veda Hopkins,avil,male,633",
+  "3,Zia Underwood,paracetamol,male,980",
+  "4,Austin Mayer,paracetamol,female,338",
+  "5,Mara Higgins,avil,female,153",
+  "6,Sybill Crosby,avil,male,193",
+  "7,Tyler Rosales,paracetamol,male,778",
+  "8,Ivan Hale,avil,female,454",
+  "9,Alika Gilmore,paracetamol,female,833",
+  "10,Len Burgess,metacin,male,325"
+)
+
+// Convert the data into an RDD of Rows
+val rowRDD = spark.sparkContext.parallelize(data).map(_.split(",")).map(p => Row(p(0), p(1), p(2), p(3), p(4)))
+
+// Create DataFrame from rowRDD and schema
+val patientDf = sqlContext.createDataFrame(rowRDD, schema)
+
+// Register the DataFrame as a temporary table
+patientDf.createOrReplaceTempView("patient1")
+
