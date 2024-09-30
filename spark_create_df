@@ -1,0 +1,118 @@
+import org.apache.spark.sql.{SparkSession, Row}
+import org.apache.spark.sql.types._
+
+    import spark.implicits._
+
+    // 1. Create DataFrame from a Sequence of Tuples
+    val data = Seq(
+      (1, "John", 28),
+      (2, "Doe", 34),
+      (3, "Smith", 45)
+    )
+    val dfFromSeq = data.toDF("id", "name", "age")
+    println("DataFrame from Seq:")
+    dfFromSeq.show()
+
+    // 2. Create DataFrame from a Case Class
+    case class Person(id: Int, name: String, age: Int)
+    val people = Seq(
+      Person(1, "John", 28),
+      Person(2, "Doe", 34),
+      Person(3, "Smith", 45)
+    )
+    val dfFromCaseClass = spark.createDataFrame(people)
+    println("DataFrame from Case Class:")
+    dfFromCaseClass.show()
+
+    // 3. Create DataFrame from RDD
+    val rdd = spark.sparkContext.parallelize(Seq(
+      (1, "John", 28),
+      (2, "Doe", 34),
+      (3, "Smith", 45)
+    ))
+    val dfFromRDD = rdd.toDF("id", "name", "age")
+    println("DataFrame from RDD:")
+    dfFromRDD.show()
+
+    // 4. Create DataFrame with Explicit Schema
+    val schema = StructType(Array(
+      StructField("id", IntegerType, true),
+      StructField("name", StringType, true),
+      StructField("age", IntegerType, true)
+    ))
+    val rddWithSchema = spark.sparkContext.parallelize(Seq(
+      Row(1, "John", 28),
+      Row(2, "Doe", 34),
+      Row(3, "Smith", 45)
+    ))
+    val dfFromSchema = spark.createDataFrame(rddWithSchema, schema)
+    println("DataFrame with Explicit Schema:")
+    dfFromSchema.show()
+
+    // 5. Create DataFrame from JSON String
+    val jsonData = """
+      |[
+      |{"id": 1, "name": "John", "age": 28},
+      |{"id": 2, "name": "Doe", "age": 34},
+      |{"id": 3, "name": "Smith", "age": 45}
+      |]
+      """.stripMargin
+
+    val dfFromJson = spark.read.json(spark.sparkContext.parallelize(Seq(jsonData)))
+    println("DataFrame from JSON:")
+    dfFromJson.show()
+
+    // 6. Create DataFrame from CSV String
+    val csvData = """
+      |id,name,age
+      |1,John,28
+      |2,Doe,34
+      |3,Smith,45
+      """.stripMargin
+
+    val dfFromCSV = spark.read.option("header", "true")
+      .csv(spark.sparkContext.parallelize(Seq(csvData)))
+    println("DataFrame from CSV:")
+    dfFromCSV.show()
+
+    // 7. Create DataFrame from Parquet
+    val parquetData = Seq(
+      (1, "John", 28),
+      (2, "Doe", 34),
+      (3, "Smith", 45)
+    ).toDF("id", "name", "age")
+    parquetData.write.parquet("/tmp/sample_parquet")
+
+    val dfFromParquet = spark.read.parquet("/tmp/sample_parquet")
+    println("DataFrame from Parquet:")
+    dfFromParquet.show()
+
+    // 8. Create DataFrame from JDBC (For illustration purposes)
+    // val jdbcDF = spark.read
+    //   .format("jdbc")
+    //   .option("url", "jdbc:mysql://your-mysql-host/dbname")
+    //   .option("driver", "com.mysql.jdbc.Driver")
+    //   .option("dbtable", "your_table_name")
+    //   .option("user", "username")
+    //   .option("password", "password")
+    //   .load()
+    // jdbcDF.show()
+
+    // 9. Create an Empty DataFrame
+    val emptySchema = StructType(Array(
+      StructField("id", IntegerType, true),
+      StructField("name", StringType, true),
+      StructField("age", IntegerType, true)
+    ))
+    val emptyDF = spark.createDataFrame(spark.sparkContext.emptyRDD[Row], emptySchema)
+    println("Empty DataFrame:")
+    emptyDF.show()
+
+    // 10. Create DataFrame from an Existing DataFrame (transformations)
+    val filteredDF = dfFromSeq.filter($"age" > 30)
+    println("Filtered DataFrame (age > 30):")
+    filteredDF.show()
+
+    spark.stop()
+  }
+}
